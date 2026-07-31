@@ -118,6 +118,87 @@
             outline: none;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
+
+        /* Switch / Toggle */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #d1d5db;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #E91E63;
+        }
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Tema visual cards */
+        .theme-card {
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: 2px solid #e5e7eb;
+        }
+        .theme-card:hover {
+            border-color: #f9a8d4;
+            transform: translateY(-2px);
+        }
+        .theme-card.selected {
+            border-color: #E91E63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15);
+        }
+        .theme-card.selected .theme-check {
+            opacity: 1;
+        }
+        .theme-check {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .theme-swatch {
+            height: 56px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        /* Radio image preference */
+        .img-pref-radio:checked + span {
+            color: #E91E63;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans">
@@ -497,6 +578,11 @@
                         </div>
 
                         <div>
+                            <label class="block text-xs text-gray-500 font-bold mb-1">Dirección donde se realizará el evento</label>
+                            <input type="text" id="event-address" required class="input-field w-full rounded p-3 text-sm" placeholder="Ej. Calle Hidalgo #12, Santa Ana Hueytlalpan, Hgo.">
+                        </div>
+
+                        <div>
                             <label class="block text-xs text-gray-500 font-bold mb-1">Tipo de evento</label>
                             <select id="event-type" class="input-field w-full rounded p-3 text-sm">
                                 <option value="Boda">💍 Boda</option>
@@ -511,16 +597,129 @@
                             </select>
                         </div>
 
+                        <!-- Selector visual de Tema -->
                         <div>
-                            <label class="block text-xs text-gray-500 font-bold mb-1">Tema, colores o estilo que tienes en mente</label>
-                            <textarea id="event-details" required class="input-field w-full rounded p-3 text-sm h-24 resize-none" placeholder="Ej. Tema princesas, colores rosa y dorado, estilo rústico... Cuéntanos la idea que llevas para tu evento."></textarea>
+                            <label class="block text-xs text-gray-500 font-bold mb-2">🎨 Tema visual de la invitación</label>
+                            <p class="text-[11px] text-gray-500 mb-3 leading-relaxed">
+                                Elige el tema que mejor va con tu evento. Si tienes dudas, marca <strong>"Recomiéndenme el más adecuado"</strong> y nosotros elegiremos por ti según la ocasión.
+                            </p>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                <!-- Elegante -->
+                                <label class="theme-card rounded-xl p-2 bg-white relative" data-theme="Elegante">
+                                    <span class="theme-check absolute top-1 right-1 w-5 h-5 bg-santa-pink text-white rounded-full flex items-center justify-center text-[10px]"><i class="fas fa-check"></i></span>
+                                    <div class="theme-swatch" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); font-family: Georgia, serif;">Elegante</div>
+                                    <p class="text-[10px] text-gray-500 mt-1.5 text-center">Sofisticado · Formal</p>
+                                </label>
+                                <!-- Floral -->
+                                <label class="theme-card rounded-xl p-2 bg-white relative" data-theme="Floral">
+                                    <span class="theme-check absolute top-1 right-1 w-5 h-5 bg-santa-pink text-white rounded-full flex items-center justify-center text-[10px]"><i class="fas fa-check"></i></span>
+                                    <div class="theme-swatch" style="background: linear-gradient(135deg, #fbcfe8 0%, #f9a8d4 50%, #f472b6 100%); color: #831843;">Floral</div>
+                                    <p class="text-[10px] text-gray-500 mt-1.5 text-center">Romántico · Fresco</p>
+                                </label>
+                                <!-- Moderno -->
+                                <label class="theme-card rounded-xl p-2 bg-white relative" data-theme="Moderno">
+                                    <span class="theme-check absolute top-1 right-1 w-5 h-5 bg-santa-pink text-white rounded-full flex items-center justify-center text-[10px]"><i class="fas fa-check"></i></span>
+                                    <div class="theme-swatch" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">Moderno</div>
+                                    <p class="text-[10px] text-gray-500 mt-1.5 text-center">Limpio · Actual</p>
+                                </label>
+                                <!-- Rústico -->
+                                <label class="theme-card rounded-xl p-2 bg-white relative" data-theme="Rústico">
+                                    <span class="theme-check absolute top-1 right-1 w-5 h-5 bg-santa-pink text-white rounded-full flex items-center justify-center text-[10px]"><i class="fas fa-check"></i></span>
+                                    <div class="theme-swatch" style="background: linear-gradient(135deg, #d4a574 0%, #a78b5f 100%);">Rústico</div>
+                                    <p class="text-[10px] text-gray-500 mt-1.5 text-center">Cálido · Orgánico</p>
+                                </label>
+                                <!-- Infantil -->
+                                <label class="theme-card rounded-xl p-2 bg-white relative" data-theme="Infantil">
+                                    <span class="theme-check absolute top-1 right-1 w-5 h-5 bg-santa-pink text-white rounded-full flex items-center justify-center text-[10px]"><i class="fas fa-check"></i></span>
+                                    <div class="theme-swatch" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbbf24 100%); color: #78350f;">Infantil</div>
+                                    <p class="text-[10px] text-gray-500 mt-1.5 text-center">Dulce · Divertido</p>
+                                </label>
+                                <!-- Bohemio -->
+                                <label class="theme-card rounded-xl p-2 bg-white relative" data-theme="Bohemio">
+                                    <span class="theme-check absolute top-1 right-1 w-5 h-5 bg-santa-pink text-white rounded-full flex items-center justify-center text-[10px]"><i class="fas fa-check"></i></span>
+                                    <div class="theme-swatch" style="background: linear-gradient(135deg, #7c2d12 0%, #92400e 50%, #b45309 100%);">Bohemio</div>
+                                    <p class="text-[10px] text-gray-500 mt-1.5 text-center">Artístico · Relajado</p>
+                                </label>
+                                <!-- Recomiéndenme -->
+                                <label class="theme-card rounded-xl p-2 bg-gradient-to-br from-santa-pink/5 to-santa-cyan/5 relative col-span-2 sm:col-span-1" data-theme="Recomiéndenme el más adecuado">
+                                    <span class="theme-check absolute top-1 right-1 w-5 h-5 bg-santa-pink text-white rounded-full flex items-center justify-center text-[10px]"><i class="fas fa-check"></i></span>
+                                    <div class="theme-swatch" style="background: linear-gradient(135deg, #E91E63 0%, #00BCD4 100%);">✨ Recomiéndenme</div>
+                                    <p class="text-[10px] text-gray-500 mt-1.5 text-center">Tienen dudas, eligen por mí</p>
+                                </label>
+                            </div>
+                            <input type="hidden" id="event-theme" required>
+                            <p class="text-[10px] text-gray-400 mt-2 italic">*Toca el tema que más te guste para seleccionarlo.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-500 font-bold mb-1">Notas adicionales (colores específicos, frases, dedicatoria, etc.) <span class="text-gray-400 font-normal">(Opcional)</span></label>
+                            <textarea id="event-details" class="input-field w-full rounded p-3 text-sm h-20 resize-none" placeholder="Ej. Colores rosa mexicano y dorado, frase 'Mis XV años', dedicatoria de papás..."></textarea>
                             <p class="text-[10px] text-gray-400 mt-1 italic">*Si prefieres, al abrir WhatsApp puedes enviarnos fotos de referencia del tema.</p>
+                        </div>
+                    </div>
+
+                    <!-- WhatsApp para confirmaciones -->
+                    <div class="space-y-4">
+                        <h4 class="text-sm font-bold text-gray-800 border-b pb-2">3. Confirmaciones de tus invitados</h4>
+                        <div>
+                            <label class="block text-xs text-gray-500 font-bold mb-1">Número de WhatsApp (donde llegarán las confirmaciones)</label>
+                            <input type="tel" id="event-whatsapp" required class="input-field w-full rounded p-3 text-sm" placeholder="Ej. 7751234567">
+                            <p class="text-[10px] text-gray-400 mt-1 italic">*Cuando tus invitados toquen el botón de confirmar, el mensaje llegará a este WhatsApp.</p>
+                        </div>
+                    </div>
+
+                    <!-- OPCIONES AVANZADAS (PLUS Y PREMIUM) -->
+                    <div id="advanced-options-container" class="hidden space-y-4 bg-gradient-to-br from-santa-pink/5 to-santa-cyan/5 p-4 rounded-xl border border-santa-pink/20">
+                        <h4 class="text-xs font-bold text-santa-pink border-b border-santa-pink/20 pb-1 uppercase flex items-center gap-1.5">
+                            <i class="fas fa-stars"></i> Opciones avanzadas de tu paquete
+                        </h4>
+
+                        <!-- Switch: Código de vestimenta -->
+                        <div class="flex items-start justify-between gap-3 py-2">
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-gray-800">👗 Código de vestimenta</p>
+                                <p class="text-[11px] text-gray-500">Incluir sugerencia de vestimenta para tus invitados (formal, casual, temático, etc.)</p>
+                                <textarea id="dress-code-detail" class="input-field w-full rounded p-2 text-xs mt-2 h-16 resize-none hidden" placeholder="Ej. Formal elegante, colores pastel / Hombres: traje oscuro, Mujeres: vestido largo"></textarea>
+                            </div>
+                            <label class="toggle-switch mt-1">
+                                <input type="checkbox" id="toggle-dress-code" onchange="toggleDressCode(this)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Switch: Mesa de regalos -->
+                        <div class="flex items-start justify-between gap-3 py-2 border-t border-santa-pink/10">
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-gray-800">🎁 Mesa de regalos</p>
+                                <p class="text-[11px] text-gray-500">Incluir información de mesa de regalos (tienda, número de lista, link, etc.)</p>
+                                <textarea id="gift-table-detail" class="input-field w-full rounded p-2 text-xs mt-2 h-16 resize-none hidden" placeholder="Ej. Liverpool, lista #12345 / Sears, solicitud 98765 / Link de Amazon..."></textarea>
+                            </div>
+                            <label class="toggle-switch mt-1">
+                                <input type="checkbox" id="toggle-gift-table" onchange="toggleGiftTable(this)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Imagen para la invitación -->
+                        <div class="border-t border-santa-pink/10 pt-3 space-y-2">
+                            <p class="text-sm font-bold text-gray-800">🖼️ Imagen para la invitación <span id="image-purpose-label" class="text-santa-pink font-normal text-[11px]">(servirá como portada)</span></p>
+                            <p id="image-adjust-note" class="text-[11px] text-gray-500 italic">La imagen se ajustará para que quede perfecta con el estilo de tu invitación.</p>
+                            <div class="space-y-2 mt-2">
+                                <label class="flex items-center gap-2 cursor-pointer p-2.5 rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                                    <input type="radio" name="image-pref" value="Enviar Foto" class="text-santa-pink focus:ring-santa-pink img-pref-radio" checked>
+                                    <span class="text-sm text-gray-700">Enviaré una foto por WhatsApp</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer p-2.5 rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                                    <input type="radio" name="image-pref" value="Generar Imagen" class="text-santa-pink focus:ring-santa-pink img-pref-radio">
+                                    <span class="text-sm text-gray-700">Que generen una imagen con el estilo de mi invitación</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Referido (Opcional) -->
                     <div class="space-y-4">
-                        <h4 class="text-sm font-bold text-gray-800 border-b pb-2">3. ¿Quién te recomendó? <span class="text-gray-400 font-normal text-xs">(Opcional)</span></h4>
+                        <h4 class="text-sm font-bold text-gray-800 border-b pb-2">4. ¿Quién te recomendó? <span class="text-gray-400 font-normal text-xs">(Opcional)</span></h4>
                         <div>
                             <label class="block text-xs text-gray-500 font-bold mb-1">Nombre de la persona que te recomendó</label>
                             <input type="text" id="client-referrer" class="input-field w-full rounded p-3 text-sm" placeholder="Ej. María González (si nadie te recomendó, deja este campo vacío)">
@@ -743,6 +942,26 @@
             document.getElementById('modal-plan-name').textContent = planName;
             document.getElementById('check-rush').checked = false; // Reset urgente
 
+            // Mostrar opciones avanzadas solo para Plus y Premium
+            const advancedOptions = document.getElementById('advanced-options-container');
+            const imagePurposeLabel = document.getElementById('image-purpose-label');
+            const imageAdjustNote = document.getElementById('image-adjust-note');
+
+            if (planName === 'Plus' || planName === 'Premium') {
+                advancedOptions.classList.remove('hidden');
+                // Ajustar texto del propósito de la imagen según el plan
+                if (planName === 'Premium') {
+                    imagePurposeLabel.textContent = '(se utilizará para la animación)';
+                    imageAdjustNote.textContent = 'La imagen se ajustará para que quede perfecta con el estilo de tu invitación y servirá de base para la animación de 5 segundos.';
+                } else {
+                    imagePurposeLabel.textContent = '(servirá como portada)';
+                    imageAdjustNote.textContent = 'La imagen se ajustará para que quede perfecta con el estilo de tu invitación.';
+                }
+            } else {
+                // Lite: ocultar opciones avanzadas
+                advancedOptions.classList.add('hidden');
+            }
+
             updateTotal();
             
             const modal = document.getElementById('order-modal');
@@ -750,6 +969,53 @@
             modal.classList.remove('hidden');
             setTimeout(() => panel.classList.remove('translate-y-full'), 10);
         }
+
+        // Toggle: Código de vestimenta
+        function toggleDressCode(checkbox) {
+            const detail = document.getElementById('dress-code-detail');
+            if (checkbox.checked) {
+                detail.classList.remove('hidden');
+                detail.focus();
+            } else {
+                detail.classList.add('hidden');
+                detail.value = '';
+            }
+        }
+
+        // Toggle: Mesa de regalos
+        function toggleGiftTable(checkbox) {
+            const detail = document.getElementById('gift-table-detail');
+            if (checkbox.checked) {
+                detail.classList.remove('hidden');
+                detail.focus();
+            } else {
+                detail.classList.add('hidden');
+                detail.value = '';
+            }
+        }
+
+        // Selección de tema visual
+        function selectTheme(themeName) {
+            document.getElementById('event-theme').value = themeName;
+            // Actualizar UI: marcar la tarjeta seleccionada
+            document.querySelectorAll('.theme-card').forEach(card => {
+                if (card.dataset.theme === themeName) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+        }
+
+        // Inicializar listeners de temas al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.theme-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    selectTheme(this.dataset.theme);
+                });
+            });
+        });
 
         function updateTotal() {
             let total = parseInt(selectedPlan.price);
@@ -788,11 +1054,34 @@
             const location = document.getElementById('client-location').value;
             const recipient = document.getElementById('event-recipient').value;
             const eventDate = document.getElementById('event-date').value;
+            const eventAddress = document.getElementById('event-address').value;
             const eventType = document.getElementById('event-type').value;
-            const details = document.getElementById('event-details').value;
+            const eventTheme = document.getElementById('event-theme').value;
+            const eventDetails = document.getElementById('event-details').value;
+            const eventWhatsapp = document.getElementById('event-whatsapp').value;
             const isRush = document.getElementById('check-rush').checked;
             const referrer = document.getElementById('client-referrer').value.trim();
             const wantsSongsInfo = document.getElementById('check-songs').checked;
+
+            // Validar tema seleccionado
+            if (!eventTheme) {
+                alert('Por favor selecciona un tema visual para tu invitación.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fab fa-whatsapp text-2xl"></i><span>Pedir por WhatsApp</span>';
+                return;
+            }
+
+            // Opciones avanzadas (Plus y Premium)
+            const isAdvancedPlan = (selectedPlan.name === 'Plus' || selectedPlan.name === 'Premium');
+            const includeDressCode = isAdvancedPlan ? document.getElementById('toggle-dress-code').checked : false;
+            const dressCodeDetail = includeDressCode ? document.getElementById('dress-code-detail').value.trim() : '';
+            const includeGiftTable = isAdvancedPlan ? document.getElementById('toggle-gift-table').checked : false;
+            const giftTableDetail = includeGiftTable ? document.getElementById('gift-table-detail').value.trim() : '';
+            let imagePref = '';
+            if (isAdvancedPlan) {
+                const radio = document.querySelector('input[name="image-pref"]:checked');
+                if (radio) imagePref = radio.value;
+            }
             
             let finalPrice = parseInt(selectedPlan.price);
             if(isRush) finalPrice += parseInt(config.priceRush);
@@ -819,8 +1108,16 @@
                 balance: balance,
                 recipient: recipient,
                 eventDate: eventDate,
+                eventAddress: eventAddress,
                 eventType: eventType,
-                details: details,
+                eventTheme: eventTheme,
+                eventDetails: eventDetails,
+                eventWhatsapp: eventWhatsapp,
+                includeDressCode: includeDressCode,
+                dressCodeDetail: dressCodeDetail,
+                includeGiftTable: includeGiftTable,
+                giftTableDetail: giftTableDetail,
+                imagePref: imagePref,
                 isRush: isRush,
                 referrer: referrer || 'Ninguno',
                 wantsSongsInfo: wantsSongsInfo,
@@ -852,7 +1149,43 @@
             text += `• Homenajeado/Evento: ${recipient}${line}`;
             text += `• Tipo de evento: ${eventType}${line}`;
             text += `• Fecha del evento: ${formattedDate}${line}`;
-            text += `• Tema/Estilo: ${details}${line}`;
+            text += `• Dirección: ${eventAddress}${line}`;
+            text += `• 🎨 Tema visual: *${eventTheme}*${line}`;
+            if (eventDetails) text += `• Notas adicionales: ${eventDetails}${line}`;
+            text += `${line}📲 *CONFIRMACIONES*${line}`;
+            text += `• WhatsApp para confirmaciones: ${eventWhatsapp}${line}`;
+
+            // Opciones avanzadas (Plus / Premium)
+            if (isAdvancedPlan) {
+                text += `${line}✨ *OPCIONES AVANZADAS (${selectedPlan.name})*${line}`;
+                
+                // Código de vestimenta
+                if (includeDressCode) {
+                    text += `• 👗 Código de vestimenta: SÍ${line}`;
+                    if (dressCodeDetail) text += `   → ${dressCodeDetail}${line}`;
+                } else {
+                    text += `• 👗 Código de vestimenta: No incluir${line}`;
+                }
+                
+                // Mesa de regalos
+                if (includeGiftTable) {
+                    text += `• 🎁 Mesa de regalos: SÍ${line}`;
+                    if (giftTableDetail) text += `   → ${giftTableDetail}${line}`;
+                } else {
+                    text += `• 🎁 Mesa de regalos: No incluir${line}`;
+                }
+                
+                // Imagen
+                if (imagePref) {
+                    const imagePurpose = (selectedPlan.name === 'Premium') ? 'para la animación' : 'como portada';
+                    text += `• 🖼️ Imagen ${imagePurpose}: ${imagePref}${line}`;
+                    if (imagePref === 'Enviar Foto') {
+                        text += `   → _(Adjuntaré la foto en este chat)_${line}`;
+                    } else {
+                        text += `   → _(Que generen una imagen con el estilo de la invitación)_${line}`;
+                    }
+                }
+            }
 
             // Referido
             if (referrer) {
